@@ -10,9 +10,10 @@ object SparkConfig {
       .master(url)
       .getOrCreate()
 
-    // Configure log4j
+    // Programmatically set log level
     val rootLogger = Logger.getRootLogger()
-    rootLogger.setLevel(Level.ERROR)
+    rootLogger.setLevel(Level.INFO)
+    Logger.getLogger("org.apache.spark").setLevel(Level.ERROR) // Reduce Spark verbosity
 
     spark
   }
