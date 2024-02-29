@@ -1,17 +1,26 @@
 package com.tutorial.spark.analysis
 
 import com.tutorial.spark.model.{MemberVolume, Trade, TradeVolume}
+import org.apache.log4j.Logger
 import org.apache.spark.sql.functions.sum
 import org.apache.spark.sql.{Dataset, SparkSession}
 
 class TradeAnalysis(spark: SparkSession) {
+  private val logger = Logger.getLogger(getClass.getName)
 
   import spark.implicits._
 
   def runAnalysis(): Unit = {
+    logger.info("Creating sample data")
     val tradesDS = createSampleData()
+
+    logger.info("Calculating top traded stocks")
     val topTradedStocksDS = calculateTopTradedStocks(tradesDS)
+
+    logger.info("Calculating total volume by member")
     val totalVolumeByMemberDS = calculateTotalVolumeByMember(tradesDS)
+
+    logger.info("Showing results")
     showResults(topTradedStocksDS, totalVolumeByMemberDS)
   }
 
@@ -38,10 +47,10 @@ class TradeAnalysis(spark: SparkSession) {
   }
 
   private def showResults(topTradedStocksDS: Dataset[TradeVolume], totalVolumeByMemberDS: Dataset[MemberVolume]): Unit = {
-    println("Top traded stocks:")
+    logger.info("Top traded stocks:")
     topTradedStocksDS.show()
 
-    println("Total trading volume by member:")
+    logger.info("Total trading volume by member:")
     totalVolumeByMemberDS.show()
   }
 }
